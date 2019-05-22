@@ -13,15 +13,23 @@ namespace BulkEmails
         static void Main(string[] args)
         {
             Directory.CreateDirectory("f://spam//");
-            int count = 1;
-            while (count <= 50)
+            int[] arr = new int[50];
+            for (int i = 0; i < 50; i++)
             {
-                var sw = new StreamWriter($"f://spam//{count}.txt");
-                sw.Write("spam text");
-                sw.Dispose();
-                count++;
-                Thread.Sleep(100);
+                arr[i] = i + 1;
             }
+
+            foreach (var x in arr)
+            {
+                ThreadPool.QueueUserWorkItem(obj =>
+                {
+                    var sw = new StreamWriter($"f://spam//{x}.txt");
+                    sw.Write("spam text");
+                    sw.Dispose();
+                    Thread.Sleep(1000);
+                });
+            }
+            Console.ReadLine();
         }
     }
 }
